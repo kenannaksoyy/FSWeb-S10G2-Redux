@@ -1,11 +1,17 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
+import { addFavorite, removeFavorite } from '../actions/favoritesActions';
+import { deleteMovie } from '../actions/movieActions';
 
 const Movie = (props) => {
     const { id } = useParams();
     const { push } = useHistory();
+    const f = useSelector(state=>{return state.favoriteReducer;});
+    const displayFavorites = f.displayFavorites;
 
-    const movies = [];
+    const movies = useSelector(state=>{return state.movieReducer.movies;});
+    const dispatch = useDispatch();
     const movie = movies.find(movie=>movie.id===Number(id));
     
     return(<div className="modal-page col">
@@ -37,8 +43,13 @@ const Movie = (props) => {
                         </section>
                         
                         <section>
-                            <span className="m-2 btn btn-dark">Favorite</span>
-                            <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete"/></span>
+                            {
+                                displayFavorites && <span className="m-2 btn btn-dark" onClick={()=>{dispatch(addFavorite(movie))}}>Favorite</span>
+                            }
+                            
+                            <span className="delete"><input type="button" 
+                            onClick={()=>{dispatch(deleteMovie(Number(id))); dispatch(removeFavorite(Number(id))); push("/movies");}} 
+                            className="m-2 btn btn-danger" value="Delete"/></span>
                         </section>
                     </div>
                 </div>

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { addMovie } from './../actions/movieActions';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import { Link, useHistory } from 'react-router-dom';
 
 const AddMovieForm = (props) => {
     const { push } = useHistory();
+    const dispatch = useDispatch();
 
     const [movie, setMovie] = useState({
+        id:parseInt(Math.random() * 100),
         title: "",
         director: "",
         genre: "",
@@ -23,6 +25,8 @@ const AddMovieForm = (props) => {
     }
 
     const handleSubmit = (e) => {
+        dispatch(addMovie(movie));
+        push("/movies");
     }
 
     const { title, director, genre, metascore, description } = movie;
